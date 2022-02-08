@@ -3,7 +3,7 @@ import './style/RickAndMorty.css'
 
 const RickAndMorty = () => {
   const [characters, setCharacters] = useState([]); //itera el array de objetos
-  const [character, setCharacter] = useState(''); // obtiene el valor (por id) del personaje
+  const [character, setCharacter] = useState('default'); // obtiene el valor (por id) del personaje
   const [characterSelected , SetCharacterSelected] = useState('') //devuelve el valor de un personaje
   const [iteracion, setIteracion] = useState([])
   useEffect(() => {
@@ -21,11 +21,11 @@ const RickAndMorty = () => {
       return setCharacters(res.results)
   }
   
-  const showUpCharacter = async () => {
+  const showUpCharacter = async () => { 
     SetCharacterSelected(character)
+    const api = await fetch(`https://rickandmortyapi.com/api/character/${characterSelected}`);
+    const res = await api.json();
     if(characterSelected !== ''){
-      const api = await fetch(`https://rickandmortyapi.com/api/character/${characterSelected}`);
-      const res = await api.json();
       console.log({ name: res.name, status: res.status, species: res.species, image: res.image });
       return setIteracion([ {name: res.name, status: res.status, species: res.species, image: res.image} ]);
     }
@@ -36,9 +36,9 @@ const RickAndMorty = () => {
           <h2>Rick and Morty App</h2>
           <select value={ character } onChange={ (e) => setCharacter(e.target.value) }>
             {
-              characters.map((character) => {
+              characters.map((item) => {
                 return(
-                  <option  value={ character.id } key={character.id} >{ character.name }</option>)
+                  <option  value={ item.id } key={item.id} >{ item.name }</option>)
               })
             }
           </select>
@@ -53,7 +53,6 @@ const RickAndMorty = () => {
                       <p>species: <b>{item.species}</b></p>
                       <p>status: <b>{item.status}</b></p>
                     </div>
-
                   </div>
                 )
               })
